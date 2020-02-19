@@ -17,6 +17,7 @@ export default async (req, res, next) => {
 
     req.userId = decoded.id;
     req.recipientId = decoded.id;
+    req.deliverymanId = decoded.id;
 
     return next();
   } catch (err) {
