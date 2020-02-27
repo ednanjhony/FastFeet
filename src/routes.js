@@ -9,6 +9,10 @@ import FileController from './app/controllers/FileController';
 import SignatureController from './app/controllers/SignatureController';
 import DeliverymanController from './app/controllers/Deliveryman';
 import OrderController from './app/controllers/OrderController';
+import DeliveryStart from './app/controllers/DeliveryStart';
+import DeliveryDone from './app/controllers/DeliveryDone';
+import DeliveryShow from './app/controllers/DeliveryShow';
+import DeliveryProblemController from './app/controllers/DeliveryProblemController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -16,6 +20,9 @@ const routes = new Router();
 const upload = multer(multerConfig);
 
 routes.post('/sessions', SessionController.store);
+routes.get('/deliveryshow/:id', DeliveryShow.index);
+
+routes.post('/delivery/:order_id/problems', DeliveryProblemController.store);
 
 routes.use(authMiddleware);
 
@@ -33,6 +40,12 @@ routes.post('/signatures', upload.single('file'), SignatureController.store);
 routes.post('/deliveryman', DeliverymanController.store);
 routes.put('/deliveryman', DeliverymanController.update);
 
+routes.get('/orders/:id', OrderController.index);
 routes.post('/orders', OrderController.store);
+routes.put('/orders/:id', OrderController.update);
+routes.delete('/orders/:id', OrderController.delete);
+
+routes.put('/delivery/start/:deliveryman_id/:order_id', DeliveryStart.update);
+routes.put('/delivery/done/:deliveryman_id/:order_id', DeliveryDone.update);
 
 export default routes;

@@ -5,6 +5,18 @@ import Recipient from '../models/Recipient';
 import Deliveryman from '../models/Deliveryman';
 
 class OrderController {
+  async index(req, res) {
+    const deliveryOrder = await Deliveryman.findByPk(req.params.id);
+
+    if (deliveryOrder) {
+      const showOrder = await Order.findAll({
+        where: { deliveryman_id: req.params.id },
+      });
+
+      return res.json(showOrder);
+    }
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       recipient_id: Yup.number()
@@ -51,6 +63,33 @@ class OrderController {
     });
 
     return res.json(order);
+  }
+
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      product: Yup.string(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
+
+    const order = await Order.findByPk(req.params.id);
+
+    const { id, product } = await order.update(req.body);
+
+    return res.json({
+      id,
+      product,
+    });
+  }
+
+  async delete(req, res) {
+    const orderDelete = await Order.destroy({
+      where: { id: req.params.id },
+    });
+
+    return res.json(orderDelete);
   }
 }
 
