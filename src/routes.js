@@ -13,6 +13,7 @@ import DeliveryStart from './app/controllers/DeliveryStart';
 import DeliveryDone from './app/controllers/DeliveryDone';
 import DeliveryShow from './app/controllers/DeliveryShow';
 import DeliveryProblemController from './app/controllers/DeliveryProblemController';
+import CancelDeliveryController from './app/controllers/CancelDeliveryController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -26,19 +27,19 @@ routes.post('/delivery/:order_id/problems', DeliveryProblemController.store);
 
 routes.use(authMiddleware);
 
-// CRUD USER
 routes.post('/users', UserController.store);
 routes.put('/users', UserController.update);
 
-// CRUD RECIPIENT
 routes.post('/recipients', RecipientController.store);
 routes.put('/recipients/:id', RecipientController.update);
+routes.delete('/recipients/:id', RecipientController.delete);
 
 routes.post('/files', upload.single('file'), FileController.store);
 routes.post('/signatures', upload.single('file'), SignatureController.store);
 
 routes.post('/deliveryman', DeliverymanController.store);
 routes.put('/deliveryman', DeliverymanController.update);
+routes.delete('/deliveryman/:id', DeliverymanController.delete);
 
 routes.get('/orders/:id', OrderController.index);
 routes.post('/orders', OrderController.store);
@@ -47,5 +48,10 @@ routes.delete('/orders/:id', OrderController.delete);
 
 routes.put('/delivery/start/:deliveryman_id/:order_id', DeliveryStart.update);
 routes.put('/delivery/done/:deliveryman_id/:order_id', DeliveryDone.update);
+
+routes.delete(
+  '/problem/:order_id/cancel-delivery',
+  CancelDeliveryController.delete
+);
 
 export default routes;
